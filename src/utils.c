@@ -6,7 +6,7 @@
 /*   By: mgadzhim <mgadzhim@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 20:15:36 by mgadzhim          #+#    #+#             */
-/*   Updated: 2025/12/16 20:22:54 by mgadzhim         ###   ########.fr       */
+/*   Updated: 2025/12/16 21:24:48 by mgadzhim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,24 @@
 void	exit_handler(void)
 {
 	ft_putstr_fd("./pipex infile cmd cmd outfile\n", 2);
-	exit (0);
+	exit (1);
 }
 
-int	open_file(char *file, int is_parent)
+int	open_file(char *file, int is_out)
 {
 	int	output;
 
-	if (is_parent == 0)
-		output = open(file, O_RDONLY, 0777);
-	if (is_parent == 1)
-		output = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	if (!is_out)
+		output = open(file, O_RDONLY);
+	else
+		output = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (output == -1)
-		exit(0);
+	{
+		ft_putstr_fd("pipex: ", 2);
+		ft_putstr_fd(file, 2);
+		ft_putstr_fd(": ", 2);
+		ft_putendl_fd(strerror(errno), 2);
+	}
 	return (output);
 }
 
@@ -68,27 +73,26 @@ char	*ft_getenv(char *name, char **env)
 char	*get_path(char *cmd, char **env)
 {
 	int		i;
-	char	*exec;
-	char	**allpath;
-	char	*path_part;
-	char	**s_cmd;
+	char	**p;
+	char	*path;
+	char	*full;
 
-	i = 0;
-	allpath = ft_split(ft_getenv("PATH", env), ':');
-	s_cmd = ft_split(cmd, ' ');
-	while (allpath[i])
+	if (ft_strchr(cmd, '/'))
+		return (ft_strdup(cmd));
+	path = ft_getenv("PATH", env);
+	p = ft_split(path, ':');
+	if (!path || !p)
+		return (NULL);
+	i = -1;
+	while (p[++i])
 	{
-		path_part = ft_strjoin(allpath[i], "/");
-		exec = ft_strjoin(path_part, s_cmd[0]);
-		free(path_part);
-		if (access(exec, F_OK | X_OK) == 0)
-		{
-			ft_free_tab(s_cmd);
-			return (exec);
-		}
-		free (exec);
+		path = ft_strjoin(p[i], "/");
+		full = ft_strjoin(path, cmd);
+		free(path);
+		if (!full || access(full, X_OK) == 0)
+			return (ft_free_tab(p), full);
+		free (full);
 	}
-	ft_free_tab(allpath);
-	ft_free_tab(s_cmd);
-	return (cmd);
+	ft_free_tab(p);
+	return (NULL);
 }

@@ -1,27 +1,30 @@
 NAME		=	pipex
 INCLUDE		=	include
-LIBFT		=	libft
+CFLAGS		=	-Wall -Wextra -Werror -Iinclude
+LIBFT_DIR	=	libft
+LIBFT		=	$(LIBFT_DIR)/libft.a
+
 SRC			=	$(wildcard src/*.c)
 OBJ			=	$(SRC:.c=.o)
 
-$(NAME):	$(OBJ)
-			@make -C $(LIBFT)
-			@cp libft/libft.a .
-			@mv libft.a $(NAME)
-			ar rcs $(NAME) $(OBJ)
+$(LIBFT):
+	$(MAKE) -C $(LIBFT_DIR)
 
-.c.o:
-	cc -Wall -Wextra -Werror -fsanitize=address -c $< -o $@
+$(NAME): $(LIBFT) $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) -L$(LIBFT_DIR) -lft -o $(NAME)
+
+%.o: %.c include/pipex.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
 all:		$(NAME)
 
 clean:
-	rm -rf	$(OBJ)
-	@make clean -C $(LIBFT)
+	rm -f $(OBJ)
+	$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
-	rm -rf	$(NAME)
-	@make fclean -C $(LIBFT)
+	rm -f $(NAME)
+	$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all
 
