@@ -1,11 +1,7 @@
 NAME		=	pipex
 INCLUDE		=	include
 LIBFT		=	libft
-SRC_DIR		=	$(wildcard src/*.c)
-
-SRC_FILES	=	main utils
-
-SRC			=	$(addprefix $(SRC_DIR), $(addsuffix .c, $(SRC_FILES)))
+SRC			=	$(wildcard src/*.c)
 OBJ			=	$(SRC:.c=.o)
 
 $(NAME):	$(OBJ)
