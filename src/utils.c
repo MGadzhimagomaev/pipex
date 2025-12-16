@@ -6,7 +6,7 @@
 /*   By: mgadzhim <mgadzhim@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 20:15:36 by mgadzhim          #+#    #+#             */
-/*   Updated: 2025/12/16 21:24:48 by mgadzhim         ###   ########.fr       */
+/*   Updated: 2025/12/16 22:50:21 by mgadzhim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ char	*ft_getenv(char *name, char **env)
 	int		j;
 	char	*sub;
 
+	if (!env)
+		return (NULL);
 	i = 0;
 	while (env[i])
 	{
@@ -80,8 +82,10 @@ char	*get_path(char *cmd, char **env)
 	if (ft_strchr(cmd, '/'))
 		return (ft_strdup(cmd));
 	path = ft_getenv("PATH", env);
+	if (!path)
+		return (NULL);
 	p = ft_split(path, ':');
-	if (!path || !p)
+	if (!p)
 		return (NULL);
 	i = -1;
 	while (p[++i])
