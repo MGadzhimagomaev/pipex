@@ -6,7 +6,7 @@
 /*   By: mgadzhim <mgadzhim@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 19:57:35 by mgadzhim          #+#    #+#             */
-/*   Updated: 2025/06/01 19:52:21 by mgadzhim         ###   ########.fr       */
+/*   Updated: 2025/12/20 21:32:44 by mgadzhim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,13 @@ static size_t	word_count(char const *s, char c)
 	size_t	count;
 	size_t	i;
 
+	if (!s)
+		return (0);
 	count = 0;
 	i = 0;
-	while (s[i] != '\0')
+	while (s[i])
 	{
-		if (s[i] != c && ((s[i - 1] == c) || (i == 0)))
+		if (s[i] != c && (i == 0 || (s[i - 1] == c)))
 			count++;
 		i++;
 	}

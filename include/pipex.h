@@ -6,7 +6,7 @@
 /*   By: mgadzhim <mgadzhim@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 20:24:48 by mgadzhim          #+#    #+#             */
-/*   Updated: 2025/12/16 22:31:11 by mgadzhim         ###   ########.fr       */
+/*   Updated: 2025/12/20 21:42:29 by mgadzhim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	exit_handler(void);
 int		open_file(char *file, int n);
 char	*ft_getenv(char *name, char **env);
 char	*get_path(char *cmd, char **env);
-void	exec(char *cmd, char **env);
 void	ft_free_tab(char **tab);
 
 #endif

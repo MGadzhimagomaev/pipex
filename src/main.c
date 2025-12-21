@@ -6,17 +6,17 @@
 /*   By: mgadzhim <mgadzhim@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 20:15:28 by mgadzhim          #+#    #+#             */
-/*   Updated: 2025/12/16 21:25:10 by mgadzhim         ###   ########.fr       */
+/*   Updated: 2025/12/20 21:42:07 by mgadzhim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/pipex.h"
 
-void	ft_exit(int e, char *cmd0, char *path, char **args)
+static void	ft_exit(int e, char *cmd, char *path, char **args)
 {
 	ft_putstr_fd("pipex: ", 2);
-	if (cmd0)
-		ft_putstr_fd(cmd0, 2);
+	if (cmd)
+		ft_putstr_fd(cmd, 2);
 	if (e == ENOENT)
 		ft_putendl_fd(": command not found", 2);
 	else if (e == EACCES)
@@ -37,7 +37,7 @@ void	ft_exit(int e, char *cmd0, char *path, char **args)
 	exit(1);
 }
 
-void	exec(char *cmd, char **env)
+static void	exec(char *cmd, char **env)
 {
 	char	**args;
 	char	*path;
@@ -58,7 +58,7 @@ void	exec(char *cmd, char **env)
 	ft_exit(errno, args[0], path, args);
 }
 
-void	child(char **argv, int *p_fd, char **env)
+static void	exec_cmd1_process(char **argv, int *p_fd, char **env)
 {
 	int	fd;
 
@@ -77,7 +77,7 @@ void	child(char **argv, int *p_fd, char **env)
 	exec(argv[2], env);
 }
 
-void	parent(char **argv, int *p_fd, char **env)
+void	exec_cmd2_process(char **argv, int *p_fd, char **env)
 {
 	int	fd;
 
@@ -106,10 +106,10 @@ int	main(int argc, char **argv, char **env)
 		return (1);
 	pid1 = fork();
 	if (pid1 == 0)
-		child(argv, p_fd, env);
+		exec_cmd1_process(argv, p_fd, env);
 	pid2 = fork();
 	if (pid2 == 0)
-		parent(argv, p_fd, env);
+		exec_cmd2_process(argv, p_fd, env);
 	close(p_fd[0]);
 	close(p_fd[1]);
 	waitpid(pid1, &st1, 0);
