@@ -1,4 +1,4 @@
-##pipex
+## pipex
 pipex is a small Unix project that recreates a shell pipeline using low-level system calls.  
 
 ```bash
